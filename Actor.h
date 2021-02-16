@@ -2,26 +2,35 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
+#include "GameWorld.h"
+#include <string>
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 
+GameWorld* createStudentWorld(std::string assetPath = "");
 
 class Actor: public GraphObject {
     public:
-        Actor(int imageID, double startX, double startY, int dir, int size, int depth)
-        : GraphObject(imageID, startX, startY, size, depth) {}; 
+        Actor(int imageID, double startX, double startY, int dir, int size, int depth, GameWorld* sw)
+        : GraphObject(imageID, startX, startY, size, depth) {
+            gw = sw;
+        }; 
         
         virtual void doSomething() = 0;
+        GameWorld* getWorld() {
+            return gw;
+        }
+
+    private:
+        GameWorld* gw;
 };
 
 class GhostRacer: public Actor {
     public:
-        GhostRacer(int imageID, double startX, double startY, int dir, int size, int depth)
-        : Actor(imageID, startX, startY, size, dir,  depth) {};
+        GhostRacer(int imageID, double startX, double startY, int dir, int size, int depth, GameWorld* sw)
+        : Actor(imageID, startX, startY, size, dir,  depth, sw) {};
 
-        void doSomething() {
-
-        };
+        void doSomething();
 };
 
 

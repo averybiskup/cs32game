@@ -1,0 +1,244 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ACTOR_H_	Actor.h	/^#define ACTOR_H_$/;"	d
+ANIMATION_POSITIONS_PER_TICK	GraphObject.h	/^const int ANIMATION_POSITIONS_PER_TICK = 1;$/;"	v
+Actor	Actor.h	/^        Actor(int imageID, double startX, double startY, int dir, int size, int depth)$/;"	f	class:Actor
+Actor	Actor.h	/^class Actor: public GraphObject {$/;"	c
+CC	Makefile	/^CC = g++$/;"	m
+CCFLAGS	Makefile	/^CCFLAGS = -Wno-deprecated-declarations$/;"	m
+FONT_SCALEDOWN	GameController.cpp	/^static const double FONT_SCALEDOWN = 760.0;$/;"	v	file:
+FREEGLUTDIR	Makefile	/^FREEGLUTDIR = \/usr\/local\/Cellar\/freeglut\/3.2.1_1$/;"	m
+GAMECONSTANTS_H_	GameConstants.h	/^#define GAMECONSTANTS_H_$/;"	d
+GAMECONTROLLER_H_	GameController.h	/^#define GAMECONTROLLER_H_$/;"	d
+GAMEWORLD_H_	GameWorld.h	/^#define GAMEWORLD_H_$/;"	d
+GL_BGR	SpriteManager.h	/^#define GL_BGR /;"	d
+GL_BGRA	SpriteManager.h	/^#define GL_BGRA /;"	d
+GRAPHOBJ_H_	GraphObject.h	/^#define GRAPHOBJ_H_$/;"	d
+GWSTATUS_CONTINUE_GAME	GameConstants.h	/^const int GWSTATUS_CONTINUE_GAME  = 1;$/;"	v
+GWSTATUS_FINISHED_LEVEL	GameConstants.h	/^const int GWSTATUS_FINISHED_LEVEL = 3;$/;"	v
+GWSTATUS_LEVEL_ERROR	GameConstants.h	/^const int GWSTATUS_LEVEL_ERROR    = 4;$/;"	v
+GWSTATUS_PLAYER_DIED	GameConstants.h	/^const int GWSTATUS_PLAYER_DIED    = 0;$/;"	v
+GWSTATUS_PLAYER_WON	GameConstants.h	/^const int GWSTATUS_PLAYER_WON     = 2;$/;"	v
+Game	GameController.h	/^inline GameController& Game()$/;"	f
+GameController	GameController.h	/^class GameController$/;"	c
+GameWorld	GameWorld.h	/^	GameWorld(std::string assetPath)$/;"	f	class:GameWorld
+GameWorld	GameWorld.h	/^class GameWorld$/;"	c
+GhostRacer	Actor.h	/^        GhostRacer(int imageID, double startX, double startY, int dir, int size, int depth)$/;"	f	class:GhostRacer
+GhostRacer	Actor.h	/^class GhostRacer: public Actor {$/;"	c
+GraphObject	GraphObject.h	/^	GraphObject(int imageID, double startX, double startY, int dir = 0, double size = 1.0, unsigned int depth = 0)$/;"	f	class:GraphObject
+GraphObject	GraphObject.h	/^class GraphObject$/;"	c
+HEADERS	Makefile	/^HEADERS = $(wildcard *.h)$/;"	m
+IID_GHOST_RACER	GameConstants.h	/^const int IID_GHOST_RACER = 0;$/;"	v
+IID_HEAL_GOODIE	GameConstants.h	/^const int IID_HEAL_GOODIE = 8;$/;"	v
+IID_HOLY_WATER_GOODIE	GameConstants.h	/^const int IID_HOLY_WATER_GOODIE = 10;$/;"	v
+IID_HOLY_WATER_PROJECTILE	GameConstants.h	/^const int IID_HOLY_WATER_PROJECTILE = 7;$/;"	v
+IID_HUMAN_PED	GameConstants.h	/^const int IID_HUMAN_PED = 4;$/;"	v
+IID_OIL_SLICK	GameConstants.h	/^const int IID_OIL_SLICK = 3;$/;"	v
+IID_SOUL_GOODIE	GameConstants.h	/^const int IID_SOUL_GOODIE = 9;$/;"	v
+IID_WHITE_BORDER_LINE	GameConstants.h	/^const int IID_WHITE_BORDER_LINE = 2;$/;"	v
+IID_YELLOW_BORDER_LINE	GameConstants.h	/^const int IID_YELLOW_BORDER_LINE = 1;$/;"	v
+IID_ZOMBIE_CAB	GameConstants.h	/^const int IID_ZOMBIE_CAB = 6;$/;"	v
+IID_ZOMBIE_PED	GameConstants.h	/^const int IID_ZOMBIE_PED = 5;$/;"	v
+INCLUDES	Makefile	/^INCLUDES = -I$(FREEGLUTDIR)\/include\/GL$/;"	m
+INVALID_KEY	GameController.h	/^const int INVALID_KEY = 0;$/;"	v
+INVALID_SPRITE_ID	SpriteManager.h	/^	static const int INVALID_SPRITE_ID = -1;$/;"	m	class:SpriteManager
+KEY_PRESS_DOWN	GameConstants.h	/^const int KEY_PRESS_DOWN   = 1003;$/;"	v
+KEY_PRESS_ENTER	GameConstants.h	/^const int KEY_PRESS_ENTER  = '\\r';$/;"	v
+KEY_PRESS_ESCAPE	GameConstants.h	/^const int KEY_PRESS_ESCAPE = '\\x1b';$/;"	v
+KEY_PRESS_LEFT	GameConstants.h	/^const int KEY_PRESS_LEFT   = 1000;$/;"	v
+KEY_PRESS_RIGHT	GameConstants.h	/^const int KEY_PRESS_RIGHT  = 1001;$/;"	v
+KEY_PRESS_SPACE	GameConstants.h	/^const int KEY_PRESS_SPACE  = ' ';$/;"	v
+KEY_PRESS_TAB	GameConstants.h	/^const int KEY_PRESS_TAB    = '\\t';$/;"	v
+KEY_PRESS_UP	GameConstants.h	/^const int KEY_PRESS_UP     = 1002;$/;"	v
+LIBS	Makefile	/^LIBS = -I\/usr\/X11\/include\/ -L\/usr\/X11\/lib -lglut -lGL -lGLU$/;"	m
+MAX_FRAMES_PER_SPRITE	SpriteManager.h	/^	static const int MAX_FRAMES_PER_SPRITE = 100;$/;"	m	class:SpriteManager
+MAX_IMAGES	SpriteManager.h	/^	static const int MAX_IMAGES = 1000;$/;"	m	class:SpriteManager
+MS_PER_FRAME	GameController.cpp	/^static const int MS_PER_FRAME = 5;$/;"	v	file:
+NUM_DEPTHS	GraphObject.h	/^	static const int NUM_DEPTHS = 4;$/;"	m	class:GraphObject
+NUM_TEST_PARAMS	GameConstants.h	/^const int NUM_TEST_PARAMS = 1;$/;"	v
+OBJECTS	Makefile	/^OBJECTS = $(patsubst %.cpp, %.o, $(wildcard *.cpp))$/;"	m
+PERSPECTIVE_FAR_PLANE	GameController.cpp	/^static const int PERSPECTIVE_FAR_PLANE	= 22;$/;"	v	file:
+PERSPECTIVE_NEAR_PLANE	GameController.cpp	/^static const int PERSPECTIVE_NEAR_PLANE = 4;$/;"	v	file:
+PRODUCT	Makefile	/^PRODUCT = GhostRacer$/;"	m
+ROAD_CENTER	GameConstants.h	/^const int ROAD_CENTER = VIEW_WIDTH \/ 2;$/;"	v
+ROAD_WIDTH	GameConstants.h	/^const int ROAD_WIDTH = 150;$/;"	v
+SCORE_Y	GameController.cpp	/^static const double SCORE_Y = 3.8;$/;"	v	file:
+SCORE_Z	GameController.cpp	/^static const double SCORE_Z = -10;$/;"	v	file:
+SOUNDFX_H_	SoundFX.h	/^#define SOUNDFX_H_$/;"	d
+SOUND_FINISHED_LEVEL	GameConstants.h	/^const int SOUND_FINISHED_LEVEL = 5;$/;"	v
+SOUND_GOT_GOODIE	GameConstants.h	/^const int SOUND_GOT_GOODIE = 10;$/;"	v
+SOUND_GOT_SOUL	GameConstants.h	/^const int SOUND_GOT_SOUL = 11;$/;"	v
+SOUND_NONE	GameConstants.h	/^const int SOUND_NONE = -1;$/;"	v
+SOUND_OIL_SLICK	GameConstants.h	/^const int SOUND_OIL_SLICK = 4;$/;"	v
+SOUND_PED_DIE	GameConstants.h	/^const int SOUND_PED_DIE = 1;$/;"	v
+SOUND_PED_HURT	GameConstants.h	/^const int SOUND_PED_HURT = 2;$/;"	v
+SOUND_PLAYER_DIE	GameConstants.h	/^const int SOUND_PLAYER_DIE = 0;$/;"	v
+SOUND_PLAYER_SPRAY	GameConstants.h	/^const int SOUND_PLAYER_SPRAY = 3;$/;"	v
+SOUND_THEME	GameConstants.h	/^const int SOUND_THEME = 9;$/;"	v
+SOUND_VEHICLE_CRASH	GameConstants.h	/^const int SOUND_VEHICLE_CRASH = 8;$/;"	v
+SOUND_VEHICLE_DIE	GameConstants.h	/^const int SOUND_VEHICLE_DIE = 6;$/;"	v
+SOUND_VEHICLE_HURT	GameConstants.h	/^const int SOUND_VEHICLE_HURT = 7;$/;"	v
+SOUND_ZOMBIE_ATTACK	GameConstants.h	/^const int SOUND_ZOMBIE_ATTACK = 12;$/;"	v
+SPRITEMANAGER_H_	SpriteManager.h	/^#define SPRITEMANAGER_H_$/;"	d
+SPRITE_HEIGHT	GameConstants.h	/^const int SPRITE_HEIGHT = 8;$/;"	v
+SPRITE_HEIGHT_GL	GameConstants.h	/^const double SPRITE_HEIGHT_GL = .25; \/\/ note - this is tied implicitly to SPRITE_HEIGHT due to carey's sloppy openGL programming$/;"	v
+SPRITE_WIDTH	GameConstants.h	/^const int SPRITE_WIDTH = 8;$/;"	v
+SPRITE_WIDTH_GL	GameConstants.h	/^const double SPRITE_WIDTH_GL = .3; \/\/ note - this is tied implicitly to SPRITE_WIDTH due to carey's sloppy openGL programming$/;"	v
+START_PLAYER_LIVES	GameWorld.h	/^const int START_PLAYER_LIVES = 3;$/;"	v
+STD	Makefile	/^STD = -std=c++17$/;"	m
+STUDENTWORLD_H_	StudentWorld.h	/^#define STUDENTWORLD_H_$/;"	d
+SoundFX	SoundFX.h	/^inline SoundFXController& SoundFX()$/;"	f
+SoundFXController	SoundFX.h	/^	SoundFXController()$/;"	f	class:SoundFXController
+SoundFXController	SoundFX.h	/^    SoundFXController()$/;"	f	class:SoundFXController
+SoundFXController	SoundFX.h	/^class SoundFXController$/;"	c
+SpriteInfo	GameController.cpp	/^struct SpriteInfo$/;"	s	file:
+SpriteManager	SpriteManager.h	/^	SpriteManager()$/;"	f	class:SpriteManager
+SpriteManager	SpriteManager.h	/^class SpriteManager$/;"	c
+StudentWorld	StudentWorld.cpp	/^StudentWorld::StudentWorld(string assetPath)$/;"	f	class:StudentWorld
+StudentWorld	StudentWorld.h	/^class StudentWorld : public GameWorld$/;"	c
+VIEW_HEIGHT	GameConstants.h	/^const int VIEW_HEIGHT = 256;$/;"	v
+VIEW_WIDTH	GameConstants.h	/^const int VIEW_WIDTH = 256;$/;"	v
+VISIBLE_MAX_X	GameController.cpp	/^static const double VISIBLE_MAX_X = 2.1; \/\/ 2.39;$/;"	v	file:
+VISIBLE_MAX_Y	GameController.cpp	/^static const double VISIBLE_MAX_Y = 1.9;$/;"	v	file:
+VISIBLE_MIN_X	GameController.cpp	/^static const double VISIBLE_MIN_X = -2.39;$/;"	v	file:
+VISIBLE_MIN_Y	GameController.cpp	/^static const double VISIBLE_MIN_Y = -2.1;$/;"	v	file:
+VISIBLE_MIN_Z	GameController.cpp	/^static const double VISIBLE_MIN_Z = -20;$/;"	v	file:
+WINDOW_HEIGHT	GameController.cpp	/^static const int WINDOW_HEIGHT = 768;$/;"	v	file:
+WINDOW_WIDTH	GameController.cpp	/^static const int WINDOW_WIDTH = 768; \/\/1024;$/;"	v	file:
+abortClip	SoundFX.h	/^	void abortClip()$/;"	f	class:SoundFXController
+abortClip	SoundFX.h	/^    void abortClip() {}$/;"	f	class:SoundFXController
+abortClip	SoundFX.h	/^    void abortClip()$/;"	f	class:SoundFXController
+advanceToNextLevel	GameWorld.h	/^	void advanceToNextLevel()$/;"	f	class:GameWorld
+animate	GraphObject.h	/^	void animate()$/;"	f	class:GraphObject
+assetDirectory	main.cpp	/^const string assetDirectory = "Assets";$/;"	v
+assetPath	GameWorld.h	/^	std::string assetPath() const$/;"	f	class:GameWorld
+convertToGlutCoords	GameController.cpp	/^static void convertToGlutCoords(double x, double y, double& gx, double& gy, double& gz)$/;"	f	file:
+createStudentWorld	StudentWorld.cpp	/^GameWorld* createStudentWorld(string assetPath)$/;"	f
+decLives	GameWorld.h	/^	void decLives()$/;"	f	class:GameWorld
+displayGamePlay	GameController.cpp	/^void GameController::displayGamePlay()$/;"	f	class:GameController
+doOutputStroke	GameController.cpp	/^static void doOutputStroke(double x, double y, double z, double size, const char* str, bool centered)$/;"	f	file:
+doSomething	Actor.h	/^        void doSomething() {$/;"	f	class:GhostRacer
+doSomething	GameController.cpp	/^void GameController::doSomething()$/;"	f	class:GameController
+doSomethingCallback	GameController.cpp	/^static void doSomethingCallback()$/;"	f	file:
+down	GraphObject.h	/^	static const int down = 270;$/;"	m	class:GraphObject
+drawPrompt	GameController.cpp	/^static void drawPrompt(string mainMessage, string secondMessage)$/;"	f	file:
+drawScoreAndLives	GameController.cpp	/^static void drawScoreAndLives(string gameStatText)$/;"	f	file:
+frameNum	GameController.cpp	/^	unsigned int frameNum;$/;"	m	struct:SpriteInfo	file:
+getAnimationLocation	GraphObject.h	/^	void getAnimationLocation(double& x, double& y) const$/;"	f	class:GraphObject
+getAnimationNumber	GraphObject.h	/^	unsigned int getAnimationNumber() const$/;"	f	class:GraphObject
+getBrightness	GraphObject.h	/^	double getBrightness() const$/;"	f	class:GraphObject
+getDirection	GraphObject.h	/^	int getDirection() const$/;"	f	class:GraphObject
+getGraphObjects	GraphObject.h	/^	static std::set<GraphObject*>& getGraphObjects(unsigned int layer)$/;"	f	class:GraphObject
+getID	GraphObject.h	/^	unsigned int getID() const$/;"	f	class:GraphObject
+getInstance	GameController.h	/^	static GameController& getInstance()$/;"	f	class:GameController
+getInstance	SoundFX.h	/^inline SoundFXController& SoundFXController::getInstance()$/;"	f	class:SoundFXController
+getKey	GameWorld.cpp	/^bool GameWorld::getKey(int& value)$/;"	f	class:GameWorld
+getLastKey	GameController.h	/^	bool getLastKey(int& value)$/;"	f	class:GameController
+getLevel	GameWorld.h	/^	int getLevel() const$/;"	f	class:GameWorld
+getLives	GameWorld.h	/^	int getLives() const$/;"	f	class:GameWorld
+getNumFrames	SpriteManager.h	/^	unsigned int getNumFrames(int imageID) const$/;"	f	class:SpriteManager
+getPositionInThisDirection	GraphObject.h	/^	virtual void getPositionInThisDirection(int angle, int units, double &dx, double &dy)$/;"	f	class:GraphObject
+getRadius	GraphObject.h	/^	double getRadius() const$/;"	f	class:GraphObject
+getScore	GameWorld.h	/^	int getScore() const$/;"	f	class:GameWorld
+getSize	GraphObject.h	/^	double getSize() const$/;"	f	class:GraphObject
+getSpriteID	SpriteManager.h	/^	int getSpriteID(unsigned int imageID, unsigned int frame) const$/;"	f	class:SpriteManager
+getX	GraphObject.h	/^	double getX() const$/;"	f	class:GraphObject
+getY	GraphObject.h	/^	double getY() const$/;"	f	class:GraphObject
+imageID	GameController.cpp	/^	unsigned int imageID;$/;"	m	struct:SpriteInfo	file:
+incLives	GameWorld.h	/^	void incLives()$/;"	f	class:GameWorld
+increaseAnimationNumber	GraphObject.h	/^	void increaseAnimationNumber()$/;"	f	class:GraphObject
+increaseScore	GameWorld.h	/^	void increaseScore(int howMuch)$/;"	f	class:GameWorld
+init	StudentWorld.cpp	/^int StudentWorld::init() {$/;"	f	class:StudentWorld
+initDrawersAndSounds	GameController.cpp	/^void GameController::initDrawersAndSounds()$/;"	f	class:GameController
+isGameOver	GameWorld.h	/^	bool isGameOver() const$/;"	f	class:GameWorld
+isVisible	GraphObject.h	/^	bool isVisible() const$/;"	f	class:GraphObject
+is_directory	main.cpp	/^bool is_directory(string path)$/;"	f
+kDefaultMsPerTick	GameController.h	/^	static const int kDefaultMsPerTick = 10;$/;"	m	class:GameController
+keyboardEvent	GameController.cpp	/^void GameController::keyboardEvent(unsigned char key, int \/* x *\/, int \/* y *\/)$/;"	f	class:GameController
+keyboardEventCallback	GameController.cpp	/^static void keyboardEventCallback(unsigned char key, int x, int y)$/;"	f	file:
+left	GraphObject.h	/^	static const int left = 180;$/;"	m	class:GraphObject
+liveActors	StudentWorld.h	/^    std::vector<Actor*> liveActors; $/;"	m	class:StudentWorld
+loadSprite	SpriteManager.h	/^	bool loadSprite(std::string filename_tga, int imageID, int frameNum)$/;"	f	class:SpriteManager
+m_animationNumber	GraphObject.h	/^	int	m_animationNumber;$/;"	m	class:GraphObject
+m_assetPath	GameWorld.h	/^	std::string		m_assetPath;$/;"	m	class:GameWorld
+m_brightness	GraphObject.h	/^	double	m_brightness;$/;"	m	class:GraphObject
+m_controller	GameWorld.h	/^	GameController* m_controller;$/;"	m	class:GameWorld
+m_curIntraFrameTick	GameController.h	/^	int			m_curIntraFrameTick;$/;"	m	class:GameController
+m_depth	GraphObject.h	/^	int		m_depth;$/;"	m	class:GraphObject
+m_destX	GraphObject.h	/^	double	m_destX;$/;"	m	class:GraphObject
+m_destY	GraphObject.h	/^	double	m_destY;$/;"	m	class:GraphObject
+m_direction	GraphObject.h	/^	int	m_direction;$/;"	m	class:GraphObject
+m_engine	SoundFX.h	/^	irrklang::ISoundEngine* m_engine;$/;"	m	class:SoundFXController
+m_frameCountPerSprite	SpriteManager.h	/^	std::map<unsigned int, unsigned int>		m_frameCountPerSprite;$/;"	m	class:SpriteManager
+m_gameStatText	GameController.h	/^	std::string m_gameStatText;$/;"	m	class:GameController
+m_gameState	GameController.h	/^	GameControllerState	m_gameState;$/;"	m	class:GameController
+m_gw	GameController.h	/^	GameWorld*	m_gw;$/;"	m	class:GameController
+m_imageID	GraphObject.h	/^	int		m_imageID;$/;"	m	class:GraphObject
+m_imageMap	SpriteManager.h	/^	std::map<unsigned int, GLuint>	m_imageMap;$/;"	m	class:SpriteManager
+m_lastKeyHit	GameController.h	/^	int			m_lastKeyHit;$/;"	m	class:GameController
+m_level	GameWorld.h	/^	int				m_level;$/;"	m	class:GameWorld
+m_lives	GameWorld.h	/^	int				m_lives;$/;"	m	class:GameWorld
+m_mainMessage	GameController.h	/^	std::string m_mainMessage;$/;"	m	class:GameController
+m_mipMapped	SpriteManager.h	/^	bool							m_mipMapped;$/;"	m	class:SpriteManager
+m_ms_per_tick	GameController.cpp	/^int GameController::m_ms_per_tick = kDefaultMsPerTick;$/;"	m	class:GameController	file:
+m_ms_per_tick	GameController.h	/^	static int m_ms_per_tick;$/;"	m	class:GameController
+m_nextStateAfterAnimate	GameController.h	/^	GameControllerState	m_nextStateAfterAnimate;$/;"	m	class:GameController
+m_nextStateAfterPrompt	GameController.h	/^	GameControllerState	m_nextStateAfterPrompt;$/;"	m	class:GameController
+m_playerWon	GameController.h	/^	bool		m_playerWon;$/;"	m	class:GameController
+m_score	GameWorld.h	/^	int				m_score;$/;"	m	class:GameWorld
+m_secondMessage	GameController.h	/^	std::string m_secondMessage;$/;"	m	class:GameController
+m_singleStep	GameController.h	/^	bool		m_singleStep;$/;"	m	class:GameController
+m_size	GraphObject.h	/^	double	m_size;$/;"	m	class:GraphObject
+m_spriteManager	GameController.h	/^	SpriteManager m_spriteManager;$/;"	m	class:GameController
+m_visible	GraphObject.h	/^	bool	m_visible;$/;"	m	class:GraphObject
+m_x	GraphObject.h	/^	double	m_x;$/;"	m	class:GraphObject
+m_y	GraphObject.h	/^	double	m_y;$/;"	m	class:GraphObject
+main	main.cpp	/^int main(int argc, char* argv[])$/;"	f
+makeMipmaps	SpriteManager.h	/^    static void makeMipmaps(unsigned char byteCount, unsigned int textureWidth, unsigned int textureHeight, char* imageData)$/;"	f	class:SpriteManager
+move	StudentWorld.cpp	/^int StudentWorld::move() {$/;"	f	class:StudentWorld
+moveALittle	GraphObject.h	/^	void moveALittle(double& from, double& to)$/;"	f	class:GraphObject
+moveAngle	GraphObject.h	/^	virtual void moveAngle(int angle, int units = 1)$/;"	f	class:GraphObject
+moveForward	GraphObject.h	/^	void moveForward(int units = 1)$/;"	f	class:GraphObject
+moveTo	GraphObject.h	/^	virtual void moveTo(double x, double y)$/;"	f	class:GraphObject
+outputStrokeCentered	GameController.cpp	/^static void outputStrokeCentered(double y, double z, const char* str)$/;"	f	file:
+pid	SoundFX.h	/^    pid_t pid;$/;"	m	class:SoundFXController
+pidValid	SoundFX.h	/^    bool pidValid;$/;"	m	class:SoundFXController
+playClip	SoundFX.h	/^	void playClip(std::string soundFile)$/;"	f	class:SoundFXController
+playClip	SoundFX.h	/^    void playClip(std::string soundFile)$/;"	f	class:SoundFXController
+playClip	SoundFX.h	/^    void playClip(std::string) {}$/;"	f	class:SoundFXController
+playSound	GameController.cpp	/^void GameController::playSound(int soundID)$/;"	f	class:GameController
+playSound	GameWorld.cpp	/^void GameWorld::playSound(int soundID)$/;"	f	class:GameWorld
+player	StudentWorld.h	/^    GhostRacer* player;$/;"	m	class:StudentWorld
+plotSprite	SpriteManager.h	/^	bool plotSprite(int imageID, int frame, double gx, double gy, double gz, int angleDegrees, double size)$/;"	f	class:SpriteManager
+quitGame	GameController.cpp	/^void GameController::quitGame()$/;"	f	class:GameController
+randInt	GameConstants.h	/^int randInt(int min, int max)$/;"	f
+reshape	GameController.cpp	/^void GameController::reshape (int w, int h)$/;"	f	class:GameController
+reshapeCallback	GameController.cpp	/^static void reshapeCallback(int w, int h)$/;"	f	file:
+right	GraphObject.h	/^	static const int right = 0;$/;"	m	class:GraphObject
+rotate	SpriteManager.h	/^	void rotate(double x, double y, double degrees, double &xout, double &yout)$/;"	f	class:SpriteManager
+run	GameController.cpp	/^void GameController::run(int argc, char* argv[], GameWorld* gw, string windowTitle)$/;"	f	class:GameController
+setBrightness	GraphObject.h	/^	void setBrightness(double brightness)$/;"	f	class:GraphObject
+setController	GameWorld.h	/^	void setController(GameController* controller)$/;"	f	class:GameWorld
+setDirection	GraphObject.h	/^	void setDirection(int d)$/;"	f	class:GraphObject
+setGameStatText	GameController.h	/^	void setGameStatText(std::string text)$/;"	f	class:GameController
+setGameStatText	GameWorld.cpp	/^void GameWorld::setGameStatText(string text)$/;"	f	class:GameWorld
+setGameState	GameController.cpp	/^void GameController::setGameState(GameControllerState s)$/;"	f	class:GameController
+setMipMapping	SpriteManager.h	/^	void setMipMapping(bool status)$/;"	f	class:SpriteManager
+setMsPerTick	GameController.h	/^	void setMsPerTick(int ms_per_tick) { m_ms_per_tick = ms_per_tick;  }$/;"	f	class:GameController
+setMsPerTick	GameWorld.cpp	/^void GameWorld::setMsPerTick(int ms_per_tick)$/;"	f	class:GameWorld
+setSize	GraphObject.h	/^	void setSize(double size)$/;"	f	class:GraphObject
+setVisible	GraphObject.h	/^	void setVisible(bool shouldIDisplay)$/;"	f	class:GraphObject
+specialKeyboardEvent	GameController.cpp	/^void GameController::specialKeyboardEvent(int key, int \/* x *\/, int \/* y *\/)$/;"	f	class:GameController
+specialKeyboardEventCallback	GameController.cpp	/^static void specialKeyboardEventCallback(int key, int x, int y)$/;"	f	file:
+tgaFileName	GameController.cpp	/^	std::string	 tgaFileName;$/;"	m	struct:SpriteInfo	file:
+timerFuncCallback	GameController.cpp	/^void GameController::timerFuncCallback(int)$/;"	f	class:GameController
+up	GraphObject.h	/^	static const int up = 90;$/;"	m	class:GraphObject
+~GameWorld	GameWorld.h	/^	virtual ~GameWorld()$/;"	f	class:GameWorld
+~GraphObject	GraphObject.h	/^	virtual ~GraphObject()$/;"	f	class:GraphObject
+~SoundFXController	SoundFX.h	/^	~SoundFXController()$/;"	f	class:SoundFXController
+~SpriteManager	SpriteManager.h	/^	~SpriteManager()$/;"	f	class:SpriteManager
+~StudentWorld	StudentWorld.cpp	/^StudentWorld::~StudentWorld() {$/;"	f	class:StudentWorld

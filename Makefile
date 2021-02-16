@@ -1,7 +1,7 @@
 CC = g++
 FREEGLUTDIR = /usr/local/Cellar/freeglut/3.2.1_1
 INCLUDES = -I$(FREEGLUTDIR)/include/GL
-LIBS = -L$(FREEGLUTDIR)/lib -L/opt/X11/lib -lglut -lGL -lGLU
+LIBS = -I/usr/X11/include/ -L/usr/X11/lib -lglut -lGL -lGLU
 STD = -std=c++17
 CCFLAGS = -Wno-deprecated-declarations
 
