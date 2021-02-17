@@ -11,16 +11,15 @@ void GhostRacer::doSomething()
 {
     int key;
 
+    // Math for ghost racer movement
     double max_shift_per_tick = 4.0;
     double direction = (getDirection() * PI) / 180.0;
     double delta_x = cos(direction) * max_shift_per_tick;
     double cur_x = getX();
     double cur_y = getY();
-    // cout << cur_x << " | "  << delta_x << " | "  << getDirection() << endl;
+
     if (getWorld()->getKey(key)) 
     {
-
-
         switch(key) 
         {
             case KEY_PRESS_LEFT:
@@ -34,8 +33,16 @@ void GhostRacer::doSomething()
             case KEY_PRESS_SPACE:
                 break;
             case KEY_PRESS_UP:
+                if (getSpeed() < 15) 
+                {
+                    setSpeed(1);
+                }
                 break;
             case KEY_PRESS_DOWN:
+                if (getSpeed() > 1) 
+                {
+                    setSpeed(- 1);
+                }
                 break;
             case KEY_PRESS_ENTER:
                 break;
@@ -54,6 +61,12 @@ double GhostRacer::getSpeed()
     return speed;
 }
 
+void GhostRacer::setSpeed(int new_speed) 
+{
+    speed += new_speed;
+}
+
+
 void BorderLine::doSomething() 
 {
     double vert_speed = vertSpeed - player->getSpeed();
@@ -71,11 +84,16 @@ void BorderLine::doSomething()
     }
 };
 
-bool WhiteBorder::isWhiteBorder() 
+void YellowBorder::hit()
 {
-    return true;
-};
-
+    if (getX() > 128) {
+        returnPlayer()->setDirection(100);
+    }
+    
+    if (getX() < 128) {
+        returnPlayer()->setDirection(80);
+    }
+}
 
 
 

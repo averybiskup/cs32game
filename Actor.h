@@ -13,18 +13,17 @@ class Actor: public GraphObject
 {
     public:
         Actor(int imageID, double startX, double startY, int dir, 
-              int size, int depth, GameWorld* sw, bool isAlive)
+              int size, int depth, GameWorld* sw, bool isAlive, 
+              bool iCanCollide)
         : GraphObject(imageID, startX, startY, size, depth) {
             gw = sw;
             alive = isAlive;
+            canCollide = iCanCollide;
         }; 
         
         virtual void doSomething() = 0;
         GameWorld* getWorld() {
             return gw;
-        }
-        virtual bool isWhiteBorder() {
-            return false;
         }
 
         void kill() {
@@ -34,11 +33,18 @@ class Actor: public GraphObject
         bool checkAlive() {
             return alive;
         }
+
+        bool collideable() {
+            return canCollide;
+        }
+
+        virtual void hit() {};
         
 
     private:
         GameWorld* gw;
         bool alive;
+        bool canCollide;
 };
 
 class GhostRacer: public Actor 
@@ -46,7 +52,7 @@ class GhostRacer: public Actor
     public:
         GhostRacer(int imageID, double startX, double startY, int dir,
                    int size, int depth, GameWorld* sw)
-        : Actor(imageID, startX, startY, size, dir,  depth, sw, true) {
+        : Actor(imageID, startX, startY, size, dir,  depth, sw, true, true) {
         
             speed = 4;
         
@@ -54,6 +60,7 @@ class GhostRacer: public Actor
 
         void doSomething();
         double getSpeed();
+        void setSpeed(int new_speed);
 
     private:
         double speed;
@@ -63,14 +70,19 @@ class BorderLine: public Actor
 {
     public:
         BorderLine(int imageID, double startX, double startY, int dir,
-                   int size, int depth, GameWorld* gw, GhostRacer* gr)
-        : Actor(imageID, startX, startY, size, dir, depth, gw, true) {
+                   int size, int depth, GameWorld* gw, GhostRacer* gr, bool collidable)
+        : Actor(imageID, startX, startY, size, dir, depth, gw, true, collidable) {
             player = gr;
             vertSpeed = -4;
             horzSpeed = 0;
         };
 
         void doSomething();
+        GhostRacer* returnPlayer() {
+            return player;
+        }
+            
+
 
     private:
         GhostRacer* player;
@@ -84,7 +96,7 @@ class WhiteBorder: public BorderLine
     public:
         WhiteBorder(int imageID, double startX, double startY, int dir, 
                     int size, int depth, GameWorld* gw, GhostRacer* gr)
-        : BorderLine(imageID, startX, startY, size, dir, depth, gw, gr) {};
+        : BorderLine(imageID, startX, startY, size, dir, depth, gw, gr, false) {};
 
         bool isWhiteBorder();
 
@@ -95,7 +107,9 @@ class YellowBorder: public BorderLine
     public:
         YellowBorder(int imageID, double startX, double startY, int dir,
                      int size, int depth, GameWorld* gw, GhostRacer* gr)
-        : BorderLine(imageID, startX, startY, size, dir, depth, gw, gr) {};
+        : BorderLine(imageID, startX, startY, size, dir, depth, gw, gr, true) {};
+
+        void hit();
 
 };
 

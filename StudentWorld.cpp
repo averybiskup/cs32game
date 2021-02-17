@@ -2,6 +2,7 @@
 #include "GameConstants.h"
 #include "Actor.h"
 #include <string>
+#include <cmath>
 using namespace std;
 
 GameWorld* createStudentWorld(string assetPath)
@@ -65,6 +66,18 @@ int StudentWorld::move() {
         }
         i++;
 
+        double dx = abs(player->getX() - actor->getX());
+        double dy = abs(player->getY() - actor->getY());
+
+        double radius_sum = player->getRadius() + actor->getRadius(); 
+
+        if (actor->collideable()) {
+            if (dx < radius_sum*0.25 && dy < radius_sum*0.6) {
+                actor->hit();
+            }
+        }
+
+
         actor->doSomething();
     }
 
@@ -79,12 +92,11 @@ int StudentWorld::move() {
     }
 
     if (delta_y >= SPRITE_HEIGHT) {
-        cout << lastBorderY << endl;
         actors.push_back(new YellowBorder(IID_YELLOW_BORDER_LINE, ROAD_CENTER - ROAD_WIDTH/2, new_border_y, 0, 2, 1, this, player));
         actors.push_back(new YellowBorder(IID_YELLOW_BORDER_LINE, ROAD_CENTER + ROAD_WIDTH/2, new_border_y, 0, 2, 1, this, player));
     }
 
-    lastBorderY -= 4;
+    lastBorderY += (-4 - player->getSpeed());
 
     
     // Deleting the dead actors from vector and memory
@@ -93,10 +105,8 @@ int StudentWorld::move() {
         actors.erase(actors.begin() + i);
     }
 
-
     return GWSTATUS_CONTINUE_GAME;
 }
-
 
 void StudentWorld::cleanUp() {
     delete player;
