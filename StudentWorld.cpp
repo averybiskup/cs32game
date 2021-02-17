@@ -23,7 +23,7 @@ StudentWorld::~StudentWorld() {
 }
 
 int StudentWorld::init() {
-    player = new GhostRacer(IID_GHOST_RACER, 128, 32, 90, 4, 0, this);
+    player = new GhostRacer(IID_GHOST_RACER, 128, 32, 90, 4.0, 0, this);
 
 
     double LEFT_EDGE = ROAD_CENTER - ROAD_WIDTH/2;
@@ -54,6 +54,11 @@ int StudentWorld::move() {
  
     double new_border_y = VIEW_HEIGHT - SPRITE_HEIGHT;
     double prev_border_y;
+
+    if (player->getHp() == 0) {
+        player->kill();
+        cout << "DEAD" << endl;
+    }
 
 
     player->doSomething();

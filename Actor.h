@@ -15,7 +15,7 @@ class Actor: public GraphObject
         Actor(int imageID, double startX, double startY, int dir, 
               int size, int depth, GameWorld* sw, bool isAlive, 
               bool iCanCollide)
-        : GraphObject(imageID, startX, startY, size, depth) {
+        : GraphObject(imageID, startX, startY, dir,  size, depth) {
             gw = sw;
             alive = isAlive;
             canCollide = iCanCollide;
@@ -39,6 +39,8 @@ class Actor: public GraphObject
         }
 
         virtual void hit() {};
+        virtual void setHp(int damage) {};
+        virtual double getHp() { return 0; };
         
 
     private:
@@ -47,13 +49,30 @@ class Actor: public GraphObject
         bool canCollide;
 };
 
-class GhostRacer: public Actor 
+class Healthy: public Actor {
+    public:
+        Healthy(int imageID, double startX, double startY, int dir,
+                int size, int depth, GameWorld* sw, double health)
+            : Actor(imageID, startX, startY, dir, size, depth, sw, true, true)
+        {
+            hp = health;
+        }
+
+        void setHp(int damage);
+        double getHp();
+            
+    private:
+        double hp;
+
+};
+
+class GhostRacer: public Healthy 
 {
     public:
         GhostRacer(int imageID, double startX, double startY, int dir,
                    int size, int depth, GameWorld* sw)
-        : Actor(imageID, startX, startY, size, dir,  depth, sw, true, true) {
-        
+        : Healthy(imageID, startX, startY, dir, size, depth, sw, 100) 
+        {
             speed = 4;
         
         };
@@ -61,6 +80,7 @@ class GhostRacer: public Actor
         void doSomething();
         double getSpeed();
         void setSpeed(int new_speed);
+        
 
     private:
         double speed;

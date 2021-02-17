@@ -66,6 +66,16 @@ void GhostRacer::setSpeed(int new_speed)
     speed += new_speed;
 }
 
+void Healthy::setHp(int damage)
+{
+    hp = damage;
+    cout << hp << endl;
+}
+
+double Healthy::getHp() {
+    return hp;
+}
+
 
 void BorderLine::doSomething() 
 {
@@ -86,13 +96,18 @@ void BorderLine::doSomething()
 
 void YellowBorder::hit()
 {
+    Actor* player = returnPlayer();
     if (getX() > 128) {
-        returnPlayer()->setDirection(100);
+        player->setDirection(105);
+        player->setHp(player->getHp() -10);
     }
     
     if (getX() < 128) {
-        returnPlayer()->setDirection(80);
+        player->setDirection(75);
+        player->setHp(player->getHp() -10);
     }
+
+    
 }
 
 
