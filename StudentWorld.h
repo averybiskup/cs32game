@@ -18,7 +18,8 @@ public:
 
 private:
     GhostRacer* player;
-    std::vector<Actor*> liveActors; 
+    std::vector<Actor*> actors; 
+    int lastBorderY;
 };
 
 #endif // STUDENTWORLD_H_

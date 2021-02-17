@@ -9,28 +9,94 @@
 
 GameWorld* createStudentWorld(std::string assetPath = "");
 
-class Actor: public GraphObject {
+class Actor: public GraphObject 
+{
     public:
-        Actor(int imageID, double startX, double startY, int dir, int size, int depth, GameWorld* sw)
+        Actor(int imageID, double startX, double startY, int dir, 
+              int size, int depth, GameWorld* sw, bool isAlive)
         : GraphObject(imageID, startX, startY, size, depth) {
             gw = sw;
+            alive = isAlive;
         }; 
         
         virtual void doSomething() = 0;
         GameWorld* getWorld() {
             return gw;
         }
+        virtual bool isWhiteBorder() {
+            return false;
+        }
+
+        void kill() {
+            alive = false;
+        }
+
+        bool checkAlive() {
+            return alive;
+        }
+        
 
     private:
         GameWorld* gw;
+        bool alive;
 };
 
-class GhostRacer: public Actor {
+class GhostRacer: public Actor 
+{
     public:
-        GhostRacer(int imageID, double startX, double startY, int dir, int size, int depth, GameWorld* sw)
-        : Actor(imageID, startX, startY, size, dir,  depth, sw) {};
+        GhostRacer(int imageID, double startX, double startY, int dir,
+                   int size, int depth, GameWorld* sw)
+        : Actor(imageID, startX, startY, size, dir,  depth, sw, true) {
+        
+            speed = 4;
+        
+        };
 
         void doSomething();
+        double getSpeed();
+
+    private:
+        double speed;
+};
+
+class BorderLine: public Actor 
+{
+    public:
+        BorderLine(int imageID, double startX, double startY, int dir,
+                   int size, int depth, GameWorld* gw, GhostRacer* gr)
+        : Actor(imageID, startX, startY, size, dir, depth, gw, true) {
+            player = gr;
+            vertSpeed = -4;
+            horzSpeed = 0;
+        };
+
+        void doSomething();
+
+    private:
+        GhostRacer* player;
+        double vertSpeed;
+        double horzSpeed;
+};
+
+
+class WhiteBorder: public BorderLine 
+{
+    public:
+        WhiteBorder(int imageID, double startX, double startY, int dir, 
+                    int size, int depth, GameWorld* gw, GhostRacer* gr)
+        : BorderLine(imageID, startX, startY, size, dir, depth, gw, gr) {};
+
+        bool isWhiteBorder();
+
+};
+
+class YellowBorder: public BorderLine 
+{
+    public:
+        YellowBorder(int imageID, double startX, double startY, int dir,
+                     int size, int depth, GameWorld* gw, GhostRacer* gr)
+        : BorderLine(imageID, startX, startY, size, dir, depth, gw, gr) {};
+
 };
 
 
