@@ -73,7 +73,7 @@ class GhostRacer: public Healthy
                    int size, int depth, GameWorld* sw)
         : Healthy(imageID, startX, startY, dir, size, depth, sw, 100) 
         {
-            speed = 4;
+            speed = 0;
         
         };
 

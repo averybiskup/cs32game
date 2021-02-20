@@ -23,25 +23,25 @@ void GhostRacer::doSomething()
         switch(key) 
         {
             case KEY_PRESS_LEFT:
-                if (getDirection() < 130)
-                    setDirection(getDirection() + 15);
+                if (getDirection() < 120)
+                    setDirection(getDirection() + 10);
                 break;
             case KEY_PRESS_RIGHT:
-                if (getDirection() > 50)
-                    setDirection(getDirection() - 15);
+                if (getDirection() > 60)
+                    setDirection(getDirection() - 10);
                 break;
             case KEY_PRESS_SPACE:
                 break;
             case KEY_PRESS_UP:
-                if (getSpeed() < 15) 
+                if (getSpeed() < 5) 
                 {
                     setSpeed(1);
                 }
                 break;
             case KEY_PRESS_DOWN:
-                if (getSpeed() > 1) 
+                if (getSpeed() > 0) 
                 {
-                    setSpeed(- 1);
+                    setSpeed(-1);
                 }
                 break;
             case KEY_PRESS_ENTER:
