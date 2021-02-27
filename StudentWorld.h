@@ -32,8 +32,8 @@ public:
     void nextLevel() {
         level++;
     };
-    int getLevel() {
-        return level;
+    void addActor(Actor* a) {
+        actors.push_back(a);
     }
      
 

@@ -120,10 +120,23 @@ class GhostRacer : public Agent
 public:
     GhostRacer(StudentWorld* sw, double x, double y)
         : Agent(sw, IID_GHOST_RACER, x, y, 4, 90, 100)
-    {};
+    {
+        spraysLeft = 10; 
+        bonus = 0;
+        soulsSaved = 0;
+    };
     void doSomething();
     virtual int soundWhenDie();
     virtual int soundWhenHurt();
+
+    int getSprays();
+    void setSprays(int s);
+
+    int getSoulsSaved();
+    int getBonus();
+
+    void setSoulsSaved(int s);
+    void setBonus(int b);
 
       // How many holy water projectiles does the object have?
     int getNumSprays() const;
@@ -133,6 +146,11 @@ public:
 
       // Spin as a result of hitting an oil slick.
     void spin();
+
+private:
+    int spraysLeft;
+    int soulsSaved;
+    int bonus;
 };
 
 class ZombieCab : public Agent
@@ -197,18 +215,30 @@ public:
 };
 
 
-//class Spray : public Actor
-//{
-//public:
-    //Spray(StudentWorld* sw, double x, double y, int dir);
-    //virtual void doSomething();
-//};
+class Spray : public Actor
+{
+public:
+    Spray(StudentWorld* sw, double x, double y, int dir)
+        : Actor(sw, IID_HOLY_WATER_PROJECTILE, x, y, 1, dir, 1)
+    {
+        maxTravelDistance = 160;
+        travelled = 0;
+    };
+    virtual void doSomething();
+    virtual bool moveRelativeToGhostRacerVerticalSpeed(double dx) { return false; };
+    virtual bool beSprayedIfAppropriate() { return false; };
+    void increaseTravel();
+
+public:
+    int maxTravelDistance;
+    int travelled;
+};
 
 class GhostRacerActivatedObject : public Actor
 {
 public:
     GhostRacerActivatedObject(StudentWorld* sw, int imageID, double x, double y, double size, int dir)
-        : Actor(sw, imageID, x, y, dir, size, 2)
+        : Actor(sw, imageID, x, y, size, dir, 2)
     {
         setVerticalSpeed(-4);
     };
@@ -263,7 +293,7 @@ class HolyWaterGoodie : public GhostRacerActivatedObject
 {
 public:
     HolyWaterGoodie(StudentWorld* sw, double x, double y)
-        : GhostRacerActivatedObject(sw, IID_HOLY_WATER_GOODIE, x, y, 1, 0)
+        : GhostRacerActivatedObject(sw, IID_HOLY_WATER_GOODIE, x, y, 2, 0)
     {
     };
     virtual bool beSprayedIfAppropriate();
@@ -279,7 +309,7 @@ class SoulGoodie : public GhostRacerActivatedObject
 {
 public:
     SoulGoodie(StudentWorld* sw, double x, double y)
-        : GhostRacerActivatedObject(sw, IID_SOUL_GOODIE, x, y, 1, 0)
+        : GhostRacerActivatedObject(sw, IID_SOUL_GOODIE, x, y, 4, 0)
     {
     };
     virtual bool beSprayedIfAppropriate();

@@ -4,6 +4,8 @@
 #include <string>
 #include <cmath>
 #include <random>
+#include <sstream>
+#include <iomanip>
 using namespace std;
 
 GameWorld* createStudentWorld(string assetPath)
@@ -56,24 +58,41 @@ int StudentWorld::init()
 
 int StudentWorld::move() 
 {
+
+    // Creating gametext
+    ostringstream oss;
+    oss << "Score: " << getScore();
+    oss << setw(7) << "Lvl: " << getLevel();
+    oss << setw(14) << "Souls2Save: " << player->getSoulsSaved();
+    oss << setw(9) << "Lives: " << getLives();
+    oss << setw(10) << "Health: " << player->getHP();
+    oss << setw(10) << "Sprays: " << player->getSprays();
+    oss << setw(9) << "Bonus: " << player->getBonus();
+    string s = oss.str();
+    setGameStatText(s);
+
     int level = getLevel();
     double LEFT_EDGE = ROAD_CENTER - ROAD_WIDTH/2;
     double RIGHT_EDGE = ROAD_CENTER + ROAD_WIDTH/2;
 
+    // Adding game actors
     if (tryAdd(max(100 - (level * 10), 20)))
-        actors.push_back(new ZombieCab(this, 100, 100));
+        addActor(new ZombieCab(this, 100, 100));
     
     if (tryAdd(max(150 - (level * 10), 40)))
-        actors.push_back(new OilSlick(this, randint(LEFT_EDGE, RIGHT_EDGE), VIEW_HEIGHT));
+        addActor(new OilSlick(this, randint(LEFT_EDGE, RIGHT_EDGE), VIEW_HEIGHT));
 
     if (tryAdd(max(200 - (level * 10), 30)))
-        actors.push_back(new HumanPedestrian(this, rand()%(VIEW_WIDTH + 1), VIEW_HEIGHT));
+        addActor(new HumanPedestrian(this, rand()%(VIEW_WIDTH + 1), VIEW_HEIGHT));
 
     if (tryAdd(max(100 - (level * 10), 20)))
-        actors.push_back(new ZombiePedestrian(this, rand()%(VIEW_WIDTH + 1), VIEW_HEIGHT));
+        addActor(new ZombiePedestrian(this, rand()%(VIEW_WIDTH + 1), VIEW_HEIGHT));
 
     if (tryAdd(100 + (10 * level)))
-        actors.push_back(new HolyWaterGoodie(this, randint(LEFT_EDGE, RIGHT_EDGE), VIEW_HEIGHT));
+        addActor(new HolyWaterGoodie(this, randint(LEFT_EDGE, RIGHT_EDGE), VIEW_HEIGHT));
+
+    if (tryAdd(100))
+        addActor(new SoulGoodie(this, randint(LEFT_EDGE, RIGHT_EDGE), VIEW_HEIGHT));
 
     // Killing player if health is 0
     if (player->getHP() <= 0) 
@@ -91,15 +110,15 @@ int StudentWorld::move()
     // Rendering a new yellow line
     if (delta_y >= SPRITE_HEIGHT) 
     {
-        actors.push_back(new BorderLine(this, ROAD_CENTER - ROAD_WIDTH/2, new_border_y, true));
-        actors.push_back(new BorderLine(this, ROAD_CENTER + ROAD_WIDTH/2, new_border_y, true));
+        addActor(new BorderLine(this, ROAD_CENTER - ROAD_WIDTH/2, new_border_y, true));
+        addActor(new BorderLine(this, ROAD_CENTER + ROAD_WIDTH/2, new_border_y, true));
     }
 
     // Rendering a new white line 
     if (delta_y >= 4*SPRITE_HEIGHT) 
     {
-        actors.push_back(new BorderLine(this, ROAD_CENTER - ROAD_WIDTH / 2 + ROAD_WIDTH/3, new_border_y, false));
-        actors.push_back(new BorderLine(this, ROAD_CENTER + ROAD_WIDTH / 2 - ROAD_WIDTH/3, new_border_y, false));
+        addActor(new BorderLine(this, ROAD_CENTER - ROAD_WIDTH / 2 + ROAD_WIDTH/3, new_border_y, false));
+        addActor(new BorderLine(this, ROAD_CENTER + ROAD_WIDTH / 2 - ROAD_WIDTH/3, new_border_y, false));
         lastBorderY = VIEW_WIDTH;
     }
 

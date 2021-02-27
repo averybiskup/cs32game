@@ -144,6 +144,30 @@ bool Agent::takeDamageAndPossiblyDie(int hp) {
 
 //=GhostRacer===========================================
 
+int GhostRacer::getSoulsSaved() {
+    return soulsSaved;
+}
+
+void GhostRacer::setSoulsSaved(int s) {
+    soulsSaved = s;
+}
+
+int GhostRacer::getBonus() {
+    return bonus;
+}
+
+void GhostRacer::setBonus(int b) {
+    bonus = b;
+}
+
+int GhostRacer::getSprays() {
+    return spraysLeft;
+}
+
+void GhostRacer::setSprays(int s) {
+    spraysLeft = s;
+}
+
 int GhostRacer::soundWhenDie() {
     return 0;
 }
@@ -177,6 +201,10 @@ void GhostRacer::doSomething()
                     setDirection(getDirection() - 10);
                 break;
             case KEY_PRESS_SPACE:
+                if (getSprays() != 0) {
+                    world()->addActor(new Spray(world(), getX(), getY() + SPRITE_HEIGHT, getDirection())); 
+                    setSprays(getSprays() - 1);
+                }
                 break;
             case KEY_PRESS_UP:
                 if (getVerticalSpeed() < 5) 
@@ -312,7 +340,9 @@ bool HolyWaterGoodie::beSprayedIfAppropriate() {return false;}
 
 //=SoulGoodie===========================================
 
-void SoulGoodie::doSomething() {};
+void SoulGoodie::doSomething() {
+    doMove();
+};
 
 void SoulGoodie::doActivity(GhostRacer* gr) {};
 
@@ -325,4 +355,26 @@ bool SoulGoodie::selfDestructs() const {return false; };
 bool SoulGoodie::isSprayable() const {return false; };
 
 bool SoulGoodie::beSprayedIfAppropriate() {return false;}
+
+//=Spray===========================================
+
+void Spray::doSomething() {
+    if (isDead())
+        return;    
+    
+    moveForward(SPRITE_HEIGHT);
+    offScreen();
+
+    if (travelled >= maxTravelDistance)
+        setDead();
+
+    increaseTravel();
+
+};
+
+void Spray::increaseTravel() {
+    travelled += SPRITE_HEIGHT;
+}
+
+
 
