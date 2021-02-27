@@ -16,8 +16,8 @@ void Actor::offScreen() {
 
 StudentWorld* Actor::world() const { return sWorld; }
 
-bool   Actor::isCollisionAvoidanceWorthy() const { return collideable; }
 void   Actor::setCollideable() { collideable = true; }
+bool   Actor::getCollideable() { return collideable; }
 int    Actor::randint(int min, int max) { return rand()%((max - min) + 1) + min; }
 void   Actor::setVerticalSpeed(double speed) { verticalSpeed = speed; }
 double Actor::getVerticalSpeed() const { return verticalSpeed; }
@@ -29,6 +29,28 @@ bool   Actor::isDead() const { return dead; }
 
 //=ZombieCab===========================================
 
+ZombieCab::ZombieCab(StudentWorld* sw, double x, double y)
+    :Agent(sw, IID_ZOMBIE_CAB, x, y, 4, 90, 3)
+{
+    setCollideable();   
+    int vs;
+    if (y > VIEW_HEIGHT/2)
+        vs = world()->getGhostRacer()->getVerticalSpeed() - randint(2, 4);
+    else
+        vs = randint(2, 4) + world()->getGhostRacer()->getVerticalSpeed();
+    setVerticalSpeed(vs);
+    damaged = false;
+};
+
+
+int ZombieCab::getDamaged() {
+    return damaged;
+}
+
+void ZombieCab::setDamaged() {
+    damaged = true;
+}
+
 int ZombieCab::soundWhenDie() {
     return 0;
 }
@@ -38,10 +60,85 @@ int ZombieCab::soundWhenHurt() {
 }
 
 void ZombieCab::doSomething() {
-   setVerticalSpeed(world()->getGhostRacer()->getVerticalSpeed());
+    if (isDead())
+       return;
+
+
+    if (!getDamaged() && world()->collide(this, world()->getGhostRacer())) {
+        setDamaged();
+        world()->getGhostRacer()->setHP(world()->getGhostRacer()->getHP() - 20); 
+        if (getX() <= world()->getGhostRacer()->getX()) {
+            setHorizontalSpeed(-5);
+            setDirection(randint(0, 19) + 120);
+        } else if (getX() > world()->getGhostRacer()->getX()) {
+            setHorizontalSpeed(5);
+            setDirection(randint(0, 19) + 60);
+        }
+    }
+
+    int vert_speed = getVerticalSpeed() - world()->getGhostRacer()->getVerticalSpeed();
+    int horiz_speed = getHorizontalSpeed();
+
+    int new_x = getX() + horiz_speed;
+    int new_y = getY() + vert_speed;
+
+    moveTo(new_x, new_y); 
+    offScreen();
+
+    double LEFT_EDGE = ROAD_CENTER - ROAD_WIDTH/2;
+    double RIGHT_EDGE = ROAD_CENTER + ROAD_WIDTH/2;
+
+    int lane = 1;
+
+    if (getX() <= LEFT_EDGE + ROAD_WIDTH/3 && getX() >= LEFT_EDGE)
+        lane = 1;
+
+    if (getX() >= LEFT_EDGE + ROAD_WIDTH/3 && getX() <= RIGHT_EDGE - ROAD_WIDTH/3)
+        lane = 2;
+
+    if (getX() <= RIGHT_EDGE && getX() >= RIGHT_EDGE - ROAD_WIDTH/3)
+        lane = 3;
+
+    cout << lane << " | " << (world()->checkLaneBottom(lane, getY())) << " - " << getY() << " = " << (world()->checkLaneBottom(lane, getY()) - getY()) << " :::: ";
+    if ((world()->checkLaneBottom(lane, getY()) - getY()) < 96 && getVerticalSpeed() > world()->getGhostRacer()->getVerticalSpeed()) {
+        cout << "Slowing" << endl;
+        setVerticalSpeed(getVerticalSpeed() - 0.5);
+        return;
+    }
+
+    if (getVerticalSpeed() <= world()->getGhostRacer()->getVerticalSpeed() && (getY() - world()->checkLaneTop(lane, getY())) < 96) {
+        cout << "Speeding" << endl;
+        setVerticalSpeed(getVerticalSpeed() + 0.5);
+        return;
+    }
+    cout << endl;
+
+    setMovementPlan(getMovementPlan() - 1);
+
+    if (getMovementPlan() > 0)
+        return;
+    else  {
+        setMovementPlan(randint(4, 32));
+
+        setVerticalSpeed(randint(-2, 2) + getVerticalSpeed());
+    }
+
+
+
+
 }
 
 bool ZombieCab::beSprayedIfAppropriate() {
+    setHP(getHP() - 1);
+    if (getHP() <= 0) {
+        setDead();
+        if (randint(1, 5) == 3) {
+            world()->addActor(new OilSlick(world(), getX(), getY()));
+        }
+        world()->increaseScore(200);
+        return true;
+    }
+
     return true;
 }
 
@@ -63,10 +160,9 @@ void Pedestrian::moveAndPossiblyPickPlan() {
         return;
     else {
 
-        int r = randint(-3, 3);
-        cout << r << endl;
-        if (r == 0)
-            r++;
+        int r = 0;
+        while (r == 0)
+            r = randint(-3, 3);
 
         setHorizontalSpeed(r);
 
@@ -85,7 +181,12 @@ void Pedestrian::moveAndPossiblyPickPlan() {
 //=HumanPedestrian===========================================
 
 bool HumanPedestrian::beSprayedIfAppropriate() {
-    return false;
+
+    setHorizontalSpeed(getHorizontalSpeed() * -1); 
+
+    setDirection(getDirection() + 180);
+
+    return true;
 }
 
 int HumanPedestrian::soundWhenHurt() {
@@ -97,6 +198,15 @@ int HumanPedestrian::soundWhenDie() {
 }
 
 void HumanPedestrian::doSomething() {
+    if (isDead()) 
+        return;
+
+    if (world()->collide(world()->getGhostRacer(), this)) {
+        setDead();
+        world()->getGhostRacer()->setHP(0);
+        return;
+    }
+
     moveAndPossiblyPickPlan();    
 }
 
@@ -111,10 +221,30 @@ int ZombiePedestrian::soundWhenDie() {
 }
 
 bool ZombiePedestrian::beSprayedIfAppropriate() {
-    return false;
+    setHP(getHP() - 1);
+    
+    if (getHP() == 0) {
+        setDead();
+
+        if (!world()->collide(this, world()->getGhostRacer()))
+            if (randint(1, 5) == 3)
+                world()->addActor(new HealingGoodie(world(), getX(), getY()));
+        
+        world()->increaseScore(150);
+    }
+
+    return true;
 }
 
 void ZombiePedestrian::doSomething() {
+    if (isDead())
+        return;
+
+    if (world()->collide(this, world()->getGhostRacer())) {
+        setDead();
+        world()->getGhostRacer()->setHP(world()->getGhostRacer()->getHP() - 5);
+        world()->increaseScore(150);
+    }
     moveAndPossiblyPickPlan();    
 }
 
@@ -129,10 +259,6 @@ bool Agent::isCollisionAvoidanceWorthy() const {
 }
 
 
-bool Agent::beSprayedIfAppropriate() {
-    return false;
-}
-
 bool Agent::moveRelativeToGhostRacerVerticalSpeed(double dx) {
     return true;
 }
@@ -144,13 +270,10 @@ bool Agent::takeDamageAndPossiblyDie(int hp) {
 
 //=GhostRacer===========================================
 
-int GhostRacer::getSoulsSaved() {
-    return soulsSaved;
+bool GhostRacer::beSprayedIfAppropriate() {
+    return false;
 }
 
-void GhostRacer::setSoulsSaved(int s) {
-    soulsSaved = s;
-}
 
 int GhostRacer::getBonus() {
     return bonus;
@@ -175,30 +298,25 @@ int GhostRacer::soundWhenDie() {
 int GhostRacer::soundWhenHurt() {
     return 0;
 }
-void GhostRacer::increaseSprays(int amt) {};
 
 void GhostRacer::doSomething() 
 {
-    int key;
+    if (isDead())
+        return;
 
-    // Math for ghost racer movement
-    double max_shift_per_tick = 4.0;
-    double direction = (getDirection() * M_PI) / 180.0;
-    double delta_x = cos(direction) * max_shift_per_tick;
-    double cur_x = getX();
-    double cur_y = getY();
+    int key;
 
     if (world()->getKey(key)) 
     {
         switch(key) 
         {
             case KEY_PRESS_LEFT:
-                if (getDirection() < 120)
-                    setDirection(getDirection() + 10);
+                if (getDirection() < 114)
+                    setDirection(getDirection() + 8);
                 break;
             case KEY_PRESS_RIGHT:
-                if (getDirection() > 60)
-                    setDirection(getDirection() - 10);
+                if (getDirection() > 66)
+                    setDirection(getDirection() - 8);
                 break;
             case KEY_PRESS_SPACE:
                 if (getSprays() != 0) {
@@ -213,7 +331,7 @@ void GhostRacer::doSomething()
                 }
                 break;
             case KEY_PRESS_DOWN:
-                if (getVerticalSpeed() > 0) 
+                if (getVerticalSpeed() > -1) 
                 {
                     setVerticalSpeed(getVerticalSpeed() - 1);
                 }
@@ -227,18 +345,31 @@ void GhostRacer::doSomething()
         }
 
     }
+
+    // Math for ghost racer movement
+    double max_shift_per_tick = 4.0;
+    double direction = (getDirection() * M_PI) / 180.0;
+    double delta_x = cos(direction) * max_shift_per_tick;
+    double cur_x = getX();
+    double cur_y = getY();
+
+
     moveTo(cur_x + delta_x, cur_y);
 
     if (getX() < (ROAD_CENTER - ROAD_WIDTH/2))
     {
-        setDirection(75);
-        setHP(getHP() -10);
+        if (getDirection() > 90) {
+            setDirection(82);
+            setHP(getHP() -10);
+        }
     }
     
     if (getX() > (ROAD_CENTER + ROAD_WIDTH/2)) 
     {
-        setDirection(105);
-        setHP(getHP() -10);
+        if (getDirection() < 90) {
+            setDirection(98);
+            setHP(getHP() -10);
+        }
     }
 
 }
@@ -259,6 +390,8 @@ bool BorderLine::moveRelativeToGhostRacerVerticalSpeed(double dx) {
 
 void BorderLine::doSomething() 
 {
+    if (isDead())
+        return;
     double vert_speed = getVerticalSpeed() - world()->getGhostRacer()->getVerticalSpeed();
     double horiz_speed = 0;
     
@@ -272,6 +405,10 @@ void BorderLine::doSomething()
 
 //=GhostRacerActivatedObject===========================================
 
+bool GhostRacerActivatedObject::isCollisionAvoidanceWorthy() const {
+    return false;
+}
+
 void GhostRacerActivatedObject::doMove() {
     double vert_speed = getVerticalSpeed() - world()->getGhostRacer()->getVerticalSpeed();
     double horiz_speed = 0;
@@ -283,13 +420,40 @@ void GhostRacerActivatedObject::doMove() {
     offScreen();
 }
 
+void GhostRacerActivatedObject::setCollided() {
+    alreadyCollided = true;
+}
+
+bool GhostRacerActivatedObject::getCollided() {
+    return alreadyCollided;
+}
+
 //=OilSlick===========================================
 
 void OilSlick::doSomething() {
+    if (isDead())
+        return;
     doMove();
+    doActivity(world()->getGhostRacer());
 };
 
-void OilSlick::doActivity(GhostRacer* gr) {};
+
+void OilSlick::doActivity(GhostRacer* gr) {
+
+    int or10 = 0;
+    while (or10 == 0)
+        or10 = randint(-1, 1);
+
+    if (world()->collide(gr, this) && !getCollided()) {
+        setCollided();
+        gr->setDirection(gr->getDirection() + (randint(5, 20) * or10));
+        cout << gr->getDirection() << endl;
+        if (gr->getDirection() < 60)
+            gr->setDirection(60);
+        else if (gr->getDirection() > 120)
+            gr->setDirection(120);
+    }
+};
 
 int OilSlick::getScoreIncrease() const {return 0; };
 
@@ -304,10 +468,25 @@ bool OilSlick::beSprayedIfAppropriate() {return false;}
 //=HealingGoodie===========================================
 
 void HealingGoodie::doSomething() {
+    if (isDead())
+        return;
     doMove();
+    doActivity(world()->getGhostRacer());
 };
 
-void HealingGoodie::doActivity(GhostRacer* gr) {};
+void HealingGoodie::doActivity(GhostRacer* gr) {
+    if (world()->collide(gr, this) && !getCollided()) {
+        setCollided();
+        setDead();
+        if (gr->getHP() >= 90)
+            gr->setHP(100);
+        else if (gr->getHP() < 90)
+            gr->setHP(gr->getHP() + 10);
+
+        world()->increaseScore(10);
+    }
+
+};
 
 int HealingGoodie::getScoreIncrease() const {return 0; };
 
@@ -317,16 +496,30 @@ bool HealingGoodie::selfDestructs() const {return false; };
 
 bool HealingGoodie::isSprayable() const {return false; };
 
-bool HealingGoodie::beSprayedIfAppropriate() {return false;}
+bool HealingGoodie::beSprayedIfAppropriate() {
+    setDead();
+    return true;
+}
+
 
 
 //=HolyWaterGoodie===========================================
 
 void HolyWaterGoodie::doSomething() {
+    if (isDead())
+        return;
     doMove();
+    doActivity(world()->getGhostRacer());
 };
 
-void HolyWaterGoodie::doActivity(GhostRacer* gr) {};
+void HolyWaterGoodie::doActivity(GhostRacer* gr) {
+    if (world()->collide(gr, this) && !getCollided()) {
+        setCollided();
+        gr->setSprays(gr->getSprays() + 10); 
+        setDead();
+    }
+
+};
 
 int HolyWaterGoodie::getScoreIncrease() const {return 0; };
 
@@ -336,15 +529,28 @@ bool HolyWaterGoodie::selfDestructs() const {return false; };
 
 bool HolyWaterGoodie::isSprayable() const {return false; };
 
-bool HolyWaterGoodie::beSprayedIfAppropriate() {return false;}
+bool HolyWaterGoodie::beSprayedIfAppropriate() {
+    setDead();
+    return true;
+}
 
 //=SoulGoodie===========================================
 
 void SoulGoodie::doSomething() {
+    if (isDead())
+        return;
     doMove();
+    doActivity(world()->getGhostRacer());
 };
 
-void SoulGoodie::doActivity(GhostRacer* gr) {};
+void SoulGoodie::doActivity(GhostRacer* gr) {
+    if (world()->collide(gr, this)) {
+        world()->increaseSouls();
+        setDead();
+        world()->increaseScore(100);
+    }
+    setDirection(getDirection() + 10);
+};
 
 int SoulGoodie::getScoreIncrease() const {return 0; };
 
@@ -358,10 +564,24 @@ bool SoulGoodie::beSprayedIfAppropriate() {return false;}
 
 //=Spray===========================================
 
+bool Spray::isCollisionAvoidanceWorthy() const {
+    return false;
+}
+
 void Spray::doSomething() {
+ 
     if (isDead())
         return;    
-    
+       
+    cout << "TEST" << endl;
+    Actor* target; 
+    target = world()->checkCollide(this);
+
+    if (target != nullptr) {
+        if (target->beSprayedIfAppropriate())
+            setDead();
+    }
+
     moveForward(SPRITE_HEIGHT);
     offScreen();
 

@@ -4,6 +4,7 @@
 #include "GameWorld.h"
 #include <string>
 #include <random>
+#include <math.h>
 
 
 class Actor;
@@ -35,13 +36,21 @@ public:
     void addActor(Actor* a) {
         actors.push_back(a);
     }
-     
+    bool collide(const Actor* a, const Actor* b) const;
+    Actor* checkCollide(Actor* a);
+    void setSoulsSaved(int s);
+    int getSoulsSaved();
+    void increaseSouls();
+    int checkLaneBottom(int lane, int current_y);
+    int checkLaneTop(int lane, int current_y);
+    
 
 private:
     GhostRacer* player;
     std::vector<Actor*> actors; 
     double lastBorderY;
     int level;
+    int soulsSaved;
 };
 
 #endif // STUDENTWORLD_H_
