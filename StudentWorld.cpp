@@ -3,6 +3,7 @@
 #include "Actor.h"
 #include <string>
 #include <cmath>
+#include <random>
 using namespace std;
 
 GameWorld* createStudentWorld(string assetPath)
@@ -23,10 +24,11 @@ StudentWorld::~StudentWorld()
     cleanUp();
 }
 
+    //Agent(StudentWorld* sw, int imageID, double x, double y, double size, int dir, int hp)
 int StudentWorld::init() 
 {
     // Initializing player
-    player = new GhostRacer(IID_GHOST_RACER, 128.0, 32.0, 90, 4.0, 0, this);
+    player = new GhostRacer(this, 128.0, 32.0);
 
     lastBorderY = 256;
 
@@ -34,18 +36,19 @@ int StudentWorld::init()
     double LEFT_EDGE = ROAD_CENTER - ROAD_WIDTH/2;
     double RIGHT_EDGE = ROAD_CENTER + ROAD_WIDTH/2;
 
-
     // Drawing the initial borders 
     double M = VIEW_HEIGHT / (4*SPRITE_HEIGHT);
-    for (int i = 0; i <= M; i++) {
-        actors.push_back(new WhiteBorder(IID_WHITE_BORDER_LINE, LEFT_EDGE + ROAD_WIDTH/3, i * (4*SPRITE_HEIGHT), 0, 2, 1, this, player));
-        actors.push_back(new WhiteBorder(IID_WHITE_BORDER_LINE, RIGHT_EDGE - ROAD_WIDTH/3, i * (4*SPRITE_HEIGHT), 0, 2, 1, this, player));
+    for (int i = 0; i <= M; i++) 
+    {
+        actors.push_back(new BorderLine(this, LEFT_EDGE + ROAD_WIDTH/3, i * (4*SPRITE_HEIGHT), false));
+        actors.push_back(new BorderLine(this, RIGHT_EDGE - ROAD_WIDTH/3, i * (4*SPRITE_HEIGHT), false));
     }
 
     double N = VIEW_HEIGHT / SPRITE_HEIGHT;
-    for (int i = 0; i <= N; i++) {
-        actors.push_back(new YellowBorder(IID_YELLOW_BORDER_LINE, LEFT_EDGE, i * SPRITE_HEIGHT, 0, 2, 1, this, player));
-        actors.push_back(new YellowBorder(IID_YELLOW_BORDER_LINE, RIGHT_EDGE, i * SPRITE_HEIGHT, 0, 2, 1, this, player));
+    for (int i = 0; i <= N; i++) 
+    {
+        actors.push_back(new BorderLine(this, LEFT_EDGE, i * SPRITE_HEIGHT, true));
+        actors.push_back(new BorderLine(this, RIGHT_EDGE, i * SPRITE_HEIGHT, true));
     }
 
     return GWSTATUS_CONTINUE_GAME;
@@ -53,11 +56,29 @@ int StudentWorld::init()
 
 int StudentWorld::move() 
 {
+    int level = getLevel();
+    double LEFT_EDGE = ROAD_CENTER - ROAD_WIDTH/2;
+    double RIGHT_EDGE = ROAD_CENTER + ROAD_WIDTH/2;
+
+    if (tryAdd(max(100 - (level * 10), 20)))
+        actors.push_back(new ZombieCab(this, 100, 100));
+    
+    if (tryAdd(max(150 - (level * 10), 40)))
+        actors.push_back(new OilSlick(this, randint(LEFT_EDGE, RIGHT_EDGE), VIEW_HEIGHT));
+
+    if (tryAdd(max(200 - (level * 10), 30)))
+        actors.push_back(new HumanPedestrian(this, rand()%(VIEW_WIDTH + 1), VIEW_HEIGHT));
+
+    if (tryAdd(max(100 - (level * 10), 20)))
+        actors.push_back(new ZombiePedestrian(this, rand()%(VIEW_WIDTH + 1), VIEW_HEIGHT));
+
+    if (tryAdd(100 + (10 * level)))
+        actors.push_back(new HolyWaterGoodie(this, randint(LEFT_EDGE, RIGHT_EDGE), VIEW_HEIGHT));
 
     // Killing player if health is 0
-    if (player->getHp() <= 0) 
+    if (player->getHP() <= 0) 
     {
-        player->kill();
+        player->setDead();
         return GWSTATUS_PLAYER_DIED;
     }
 
@@ -70,59 +91,43 @@ int StudentWorld::move()
     // Rendering a new yellow line
     if (delta_y >= SPRITE_HEIGHT) 
     {
-        actors.push_back(new YellowBorder(IID_YELLOW_BORDER_LINE, ROAD_CENTER - ROAD_WIDTH/2, new_border_y, 0, 2, 1, this, player));
-        actors.push_back(new YellowBorder(IID_YELLOW_BORDER_LINE, ROAD_CENTER + ROAD_WIDTH/2, new_border_y, 0, 2, 1, this, player));
+        actors.push_back(new BorderLine(this, ROAD_CENTER - ROAD_WIDTH/2, new_border_y, true));
+        actors.push_back(new BorderLine(this, ROAD_CENTER + ROAD_WIDTH/2, new_border_y, true));
     }
 
     // Rendering a new white line 
     if (delta_y >= 4*SPRITE_HEIGHT) 
     {
-        actors.push_back(new WhiteBorder(IID_WHITE_BORDER_LINE, ROAD_CENTER - ROAD_WIDTH / 2 + ROAD_WIDTH/3, new_border_y, 0, 2, 1, this, player));
-        actors.push_back(new WhiteBorder(IID_WHITE_BORDER_LINE, ROAD_CENTER + ROAD_WIDTH / 2 - ROAD_WIDTH/3, new_border_y, 0, 2, 1, this, player));
-        lastBorderY = 256;
+        actors.push_back(new BorderLine(this, ROAD_CENTER - ROAD_WIDTH / 2 + ROAD_WIDTH/3, new_border_y, false));
+        actors.push_back(new BorderLine(this, ROAD_CENTER + ROAD_WIDTH / 2 - ROAD_WIDTH/3, new_border_y, false));
+        lastBorderY = VIEW_WIDTH;
     }
 
     // Keeping track of the last white line's y position
-    lastBorderY -= (4 + player->getSpeed());
+    lastBorderY -= (4 + player->getVerticalSpeed());
 
-    std::vector<int> deadActors;
     // Iterating over actors
-    int i = 0;
-    for (auto actor: actors) {
-
-
-        if (actor->checkAlive() == false) 
-            deadActors.push_back(i);
-        else 
-            actor->doSomething();
-
-        i++;
-
-        // Collision calcuation
-        double dx = abs(player->getX() - actor->getX());
-        double dy = abs(player->getY() - actor->getY());
-        double radius_sum = player->getRadius() + actor->getRadius(); 
-
-        // Checking for collisions between player and any actor
-        // Assuming that actor is collideable
-        if (actor->collideable()) {
-            if (dx < radius_sum*0.25 && dy < radius_sum*0.6) {
-                actor->hit();
-            }
-        }
-
-    }
-
-
-    
-    // Deleting the dead actors from vector and memory
-    for (auto i: deadActors) 
+    for (auto actor = actors.begin(); actor != actors.end();) 
     {
-        delete actors[i];
-        actors.erase(actors.begin() + i);
-    }
+        Actor* ptr = (*actor);
 
-    deadActors.clear();
+        // Checking that actor is alive
+        if (ptr->isDead()) 
+        {
+            delete ptr;
+            actor = actors.erase(actor);
+        } else 
+        {
+            ptr->doSomething();
+
+
+            double dx = abs(player->getX() - ptr->getX());
+            double dy = abs(player->getY() - ptr->getY());
+            double radius_sum = player->getRadius() + ptr->getRadius(); 
+
+            actor++;
+        }
+    }
 
     return GWSTATUS_CONTINUE_GAME;
 }
@@ -130,7 +135,8 @@ int StudentWorld::move()
 void StudentWorld::cleanUp() 
 {
     delete player;
-    for (auto it = actors.begin(); it != actors.end();) {
+    for (auto it = actors.begin(); it != actors.end();) 
+    {
         delete *it;
         it = actors.erase(it);
     }
