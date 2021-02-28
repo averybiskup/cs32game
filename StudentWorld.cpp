@@ -89,7 +89,6 @@ int StudentWorld::checkLaneTop(int lane, int current_y) {
         return -5000;
     else
         return a->getY();
-
 }
 
 int StudentWorld::checkLaneBottom(int lane, int current_y) {
@@ -195,7 +194,6 @@ int StudentWorld::move()
     double RIGHT_EDGE = ROAD_CENTER + ROAD_WIDTH/2;
 
     if (tryAdd(max(100 - (level * 10), 20))) {
-    
         if (checkLaneBottom(1, SPRITE_HEIGHT) > VIEW_HEIGHT/3) {
             addActor(new ZombieCab(this, ROAD_CENTER - ROAD_WIDTH/3, SPRITE_HEIGHT / 2));
         } else if (checkLaneTop(1, VIEW_HEIGHT - (SPRITE_HEIGHT/2)) < (VIEW_HEIGHT*2)/3) {
@@ -232,7 +230,13 @@ int StudentWorld::move()
     if (player->getHP() <= 0) 
     {
         player->setDead();
+        decLives();
         return GWSTATUS_PLAYER_DIED;
+    }
+
+    if (getSoulsSaved() == ((getLevel()*2) + 5)) {
+        playSound(SOUND_FINISHED_LEVEL);
+        return GWSTATUS_FINISHED_LEVEL;
     }
 
     player->doSomething();

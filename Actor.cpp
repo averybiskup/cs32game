@@ -66,6 +66,7 @@ void ZombieCab::doSomething() {
 
     if (!getDamaged() && world()->collide(this, world()->getGhostRacer())) {
         setDamaged();
+        world()->playSound(SOUND_VEHICLE_CRASH);
         world()->getGhostRacer()->setHP(world()->getGhostRacer()->getHP() - 20); 
         if (getX() <= world()->getGhostRacer()->getX()) {
             setHorizontalSpeed(-5);
@@ -99,19 +100,15 @@ void ZombieCab::doSomething() {
     if (getX() <= RIGHT_EDGE && getX() >= RIGHT_EDGE - ROAD_WIDTH/3)
         lane = 3;
 
-    cout << lane << " | " << (world()->checkLaneBottom(lane, getY())) << " - " << getY() << " = " << (world()->checkLaneBottom(lane, getY()) - getY()) << " :::: ";
     if ((world()->checkLaneBottom(lane, getY()) - getY()) < 96 && getVerticalSpeed() > world()->getGhostRacer()->getVerticalSpeed()) {
-        cout << "Slowing" << endl;
         setVerticalSpeed(getVerticalSpeed() - 0.5);
         return;
     }
 
     if (getVerticalSpeed() <= world()->getGhostRacer()->getVerticalSpeed() && (getY() - world()->checkLaneTop(lane, getY())) < 96) {
-        cout << "Speeding" << endl;
         setVerticalSpeed(getVerticalSpeed() + 0.5);
         return;
     }
-    cout << endl;
 
     setMovementPlan(getMovementPlan() - 1);
 
@@ -123,9 +120,6 @@ void ZombieCab::doSomething() {
         setVerticalSpeed(randint(-2, 2) + getVerticalSpeed());
     }
 
-
-
-
 }
 
 bool ZombieCab::beSprayedIfAppropriate() {
@@ -136,7 +130,10 @@ bool ZombieCab::beSprayedIfAppropriate() {
             world()->addActor(new OilSlick(world(), getX(), getY()));
         }
         world()->increaseScore(200);
+        world()->playSound(SOUND_VEHICLE_DIE);
         return true;
+    } else {
+        world()->playSound(SOUND_VEHICLE_HURT);
     }
 
     return true;
@@ -185,6 +182,7 @@ bool HumanPedestrian::beSprayedIfAppropriate() {
     setHorizontalSpeed(getHorizontalSpeed() * -1); 
 
     setDirection(getDirection() + 180);
+    world()->playSound(SOUND_PED_HURT);
 
     return true;
 }
@@ -231,9 +229,21 @@ bool ZombiePedestrian::beSprayedIfAppropriate() {
                 world()->addActor(new HealingGoodie(world(), getX(), getY()));
         
         world()->increaseScore(150);
+        world()->playSound(SOUND_PED_DIE);
+    } else {
+        world()->playSound(SOUND_PED_HURT);
     }
 
+
     return true;
+}
+
+void ZombiePedestrian::setTicksGrunt(int t) {
+    ticksGrunt = t;
+}
+
+int ZombiePedestrian::getTicksGrunt() {
+    return ticksGrunt;
 }
 
 void ZombiePedestrian::doSomething() {
@@ -241,11 +251,33 @@ void ZombiePedestrian::doSomething() {
         return;
 
     if (world()->collide(this, world()->getGhostRacer())) {
+        world()->playSound(SOUND_PED_DIE);
         setDead();
         world()->getGhostRacer()->setHP(world()->getGhostRacer()->getHP() - 5);
         world()->increaseScore(150);
+        return;
     }
     moveAndPossiblyPickPlan();    
+
+    if (abs(world()->getGhostRacer()->getX() - getX()) <= 30
+        && world()->getGhostRacer()->getY() < getY()) {
+
+        setTicksGrunt(getTicksGrunt() - 1);
+
+        if (getTicksGrunt() <= 0) {
+            world()->playSound(SOUND_ZOMBIE_ATTACK);
+            setTicksGrunt(20);
+        }
+        setDirection(270);
+        if (world()->getGhostRacer()->getX() < getX()) {
+            setHorizontalSpeed(-1);
+        } else if (world()->getGhostRacer()->getX() > getX()) {
+            setHorizontalSpeed(1);
+        } else {
+            setHorizontalSpeed(0);
+        }
+    }
+
 }
 
 //=Agent===========================================
@@ -304,6 +336,11 @@ void GhostRacer::doSomething()
     if (isDead())
         return;
 
+    if (getHP() == 0) {
+        setDead();
+        world()->playSound(SOUND_PLAYER_DIE);
+    }
+
     int key;
 
     if (world()->getKey(key)) 
@@ -322,6 +359,7 @@ void GhostRacer::doSomething()
                 if (getSprays() != 0) {
                     world()->addActor(new Spray(world(), getX(), getY() + SPRITE_HEIGHT, getDirection())); 
                     setSprays(getSprays() - 1);
+                    world()->playSound(SOUND_PLAYER_SPRAY);
                 }
                 break;
             case KEY_PRESS_UP:
@@ -359,6 +397,8 @@ void GhostRacer::doSomething()
     if (getX() < (ROAD_CENTER - ROAD_WIDTH/2))
     {
         if (getDirection() > 90) {
+            world()->playSound(SOUND_VEHICLE_CRASH);
+            moveTo((ROAD_CENTER - ROAD_WIDTH/2), getY());
             setDirection(82);
             setHP(getHP() -10);
         }
@@ -367,6 +407,8 @@ void GhostRacer::doSomething()
     if (getX() > (ROAD_CENTER + ROAD_WIDTH/2)) 
     {
         if (getDirection() < 90) {
+            world()->playSound(SOUND_VEHICLE_CRASH);
+            moveTo((ROAD_CENTER + ROAD_WIDTH/2), getY());
             setDirection(98);
             setHP(getHP() -10);
         }
@@ -445,9 +487,9 @@ void OilSlick::doActivity(GhostRacer* gr) {
         or10 = randint(-1, 1);
 
     if (world()->collide(gr, this) && !getCollided()) {
+        world()->playSound(SOUND_OIL_SLICK);
         setCollided();
         gr->setDirection(gr->getDirection() + (randint(5, 20) * or10));
-        cout << gr->getDirection() << endl;
         if (gr->getDirection() < 60)
             gr->setDirection(60);
         else if (gr->getDirection() > 120)
@@ -476,6 +518,7 @@ void HealingGoodie::doSomething() {
 
 void HealingGoodie::doActivity(GhostRacer* gr) {
     if (world()->collide(gr, this) && !getCollided()) {
+        world()->playSound(SOUND_GOT_GOODIE);
         setCollided();
         setDead();
         if (gr->getHP() >= 90)
@@ -514,6 +557,7 @@ void HolyWaterGoodie::doSomething() {
 
 void HolyWaterGoodie::doActivity(GhostRacer* gr) {
     if (world()->collide(gr, this) && !getCollided()) {
+        world()->playSound(SOUND_GOT_GOODIE);
         setCollided();
         gr->setSprays(gr->getSprays() + 10); 
         setDead();
@@ -545,6 +589,7 @@ void SoulGoodie::doSomething() {
 
 void SoulGoodie::doActivity(GhostRacer* gr) {
     if (world()->collide(gr, this)) {
+        world()->playSound(SOUND_GOT_SOUL);
         world()->increaseSouls();
         setDead();
         world()->increaseScore(100);
@@ -573,7 +618,6 @@ void Spray::doSomething() {
     if (isDead())
         return;    
        
-    cout << "TEST" << endl;
     Actor* target; 
     target = world()->checkCollide(this);
 

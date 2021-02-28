@@ -208,6 +208,11 @@ public:
     virtual bool beSprayedIfAppropriate();
     int soundWhenHurt();
     int soundWhenDie();
+    int getTicksGrunt();
+    void setTicksGrunt(int t);
+private:
+    int ticksGrunt;
+
 };
 
 
