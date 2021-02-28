@@ -16,10 +16,10 @@ class StudentWorld : public GameWorld
 {
 public:
     StudentWorld(std::string assetPath);
-    virtual int init();
-    virtual int move();
-    virtual void cleanUp();
-    virtual ~StudentWorld();
+    int init();
+    int move();
+    void cleanUp();
+    ~StudentWorld();
     GhostRacer* getGhostRacer() {
         return player;
     };
@@ -36,6 +36,7 @@ public:
     void addActor(Actor* a) {
         actors.push_back(a);
     }
+    int getBonus();
     bool collide(const Actor* a, const Actor* b) const;
     Actor* checkCollide(Actor* a);
     void setSoulsSaved(int s);
@@ -43,6 +44,7 @@ public:
     void increaseSouls();
     int checkLaneBottom(int lane, int current_y);
     int checkLaneTop(int lane, int current_y);
+    void subBonus();
     
 
 private:
@@ -51,6 +53,7 @@ private:
     double lastBorderY;
     int level;
     int soulsSaved;
+    int bonusPoints;
 };
 
 #endif // STUDENTWORLD_H_

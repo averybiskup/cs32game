@@ -1,0 +1,462 @@
+GraphObject > Actor
+    - doSomething
+        - Pure virtual so children are forced to implement.
+        - Holds code to be ran every tick of the game for each actor.
+
+    - isDead
+        - not virtual, as every actor needs this same functionality
+        - returns true if the actor is dead, else false
+
+    - setDead
+        - not virtual, as every actor needs this same functionality
+        - allows actors to set themselves as dead
+
+    - world
+        - not virtual, as every actor needs this same functionality
+        - returns a pointer to the studentworld in order for
+            actors to access the actors vector in student world for
+            various needs
+
+    - getVerticalSpeed
+        - not virtual, as every actor needs this same functionality
+        - returns the vertical speed of the calling actor
+
+    - setVerticalSpeed
+        - not virtual, as every actor needs this same functionality
+        - sets the vertical speed of the calling actor
+
+    - getHorizontalSpeed
+        - not virtual, as every actor needs this same functionality
+        - returns the horizontal speed of the calling actor
+
+    - beSprayedIfAppropriate
+        - pure virtual, to force children to implement, because
+            we want them to return different values based on
+            which type of actor they are
+        - returns true if the actor should be hit by HolyWater
+            and also affects the actor being hit, otherwise
+            returns false, and does nothing to the actor
+
+    - isCollisionAvoidanceWorthy
+        - pure virtual, we want each actor to return different values
+        - returns true if zombiecabs should avoid this actor when
+            looking for a space to spawn
+
+    - setCollideable
+        - not virtual, because each actor needs this same functionality
+        - sets whether or not the current actor should collide with
+            the player or Spray 
+
+    - getCollideable
+        - not virtual, because each actor needs this same functionality
+        - gets whether or not the current actor is collideable
+
+    - offScreen
+        - not virtual, because each actor needs this same functionality
+        - checks whether the current actor is off the screen, and 
+            sets them as dead if so        
+
+    - randint
+        - not virtual, because each actor needs this same functionality
+        - returns a random number between two inputs
+
+GraphObject > Actor > BorderLine
+
+    - doSomething
+        - not virtual because BorderLine has no children
+        - defined in parent because other children need to use it as well
+
+    - isCollisionAvoidanceWorthy
+        - not virtual because BorderLine has no children
+        - returns false because borderlines should not be accounted
+            for when determining zombiecab placement
+    
+    - beSprayedIfAppropriate
+        - not virtual because BorderLine has no children
+        - returns false because these are not able to be sprayed
+
+GraphObject > Actor > Agent
+
+    - getHP
+        - not virtual because all agents need the same functionality
+        - returns the amount of health left for an agent
+   
+    - setHP
+        - not virtual because all agents need the same functionality
+        - allows agent to set the amount of health
+    
+    - getMovementPlan
+        - not virtual, and defined here because all agents need this
+            except for GhostRacer, which we don't need to to use it
+        - returns the distance that the agent still needs to travel
+            in their current path
+
+    - setMovementPlan
+        - not virtual, and defined here because all agents need this
+            except for GhostRacer, which we don't need to to use it
+        - sets the movementPlan so we can reset paths
+
+GraphObject > Actor > Agent > GhostRacer
+    
+    - doSomething
+        - not virtual because BorderLine has no children
+        - defined in parent because other children need to use it as well
+
+        doSomething
+            if we're dead, do nothing
+            check for inputs from the user
+                if left key, move left aslong as we don't hit the wall
+                if right key, move right as long as we don't hit the wall
+                if space, shoot spray as long as we have some left
+                if up, go faster
+                if down, go slower
+        
+            move to new location
+            
+            check that we haven't hit a wall, and reroute if we have
+        
+                
+
+    - beSprayedIfAppropriate
+        - not virtual because GhostRacer has no children
+        - inherited from Actor, returns false, because GhostRacer
+            cannot be sprayed by Spray
+    
+    - getSprays
+        - not virtual because no children need this method
+        - returns how many sprays left the ghost racer has
+    
+    - setSprays
+        - not virtual because no children need this method
+        - sets the number of sprays left that the ghost racer has
+
+GraphObject > Actor > Agent > ZombieCab
+
+    - doSomething
+        - not virtual because BorderLine has no children
+        - defined in parent because other children need to use it as well
+        
+        doSomething
+            if we're dead, do nothing
+        
+            if we collide with the player, and we have collided with the player already
+            then
+                set that we're now damaged
+                play the sound
+                squiggle off the screen to right or left base on position
+                
+            get the new x and y positions using the current speed
+                then move there
+
+            checkk what lane we're in
+                go faster if we are in front of the player, and there is an obejct behind us
+
+                go slower if we are behind the player and there's in object in fron of us
+
+            recalculate our movementplan in order to decide where to go
+
+    - beSprayedIfAppropriate
+        - not virtual because ZombieCab  has no children
+        - inherited from Actor, returns true because zombiecab
+            can be sprayed
+
+    - setDamaged
+        - not virtual because no other classes use this function
+        - sets where or not the zombiecab has been damaged, because
+            we don't want to let it damage the ghostracer twice
+    
+    - getDamaged
+        - not virtual because no other classes use this function
+        - returns whether or not the zombiecab has damaged the
+            ghostracer
+
+GraphObject > Actor > Agent > Pedestrian
+
+    - moveAndPossiblyPickPlan
+        - not virtual because this is used the same way by all
+            pedestrians
+        - functionality for moving zombie peds and human peds
+
+GraphObject > Actor > Agent > Pedestrian > HumanPedestrian
+    
+     - doSomething
+        - not virtual because BorderLine has no children
+        - defined in parent because other children need to use it as well
+
+    - beSprayedIfAppropriate
+        - inherited from Actor, not virtual because no children
+        - returns true because humans can be sprayed
+
+GraphObject > Actor > Agent > Pedestrian > ZombiePedestrian
+
+     - doSomething
+        - not virtual because BorderLine has no children
+        - defined in parent because other children need to use it as well
+        
+        doSomething
+            if we're not dead continue
+            check if are colliding with the player
+                and kill ourselves if so, and set player's hp -10
+
+            move
+            
+            check if we are close enough to the player to attack it
+                check when we can grunt, so we grunt every 20 ticks
+                calculate where we should go, and move towards player
+
+    - beSprayedIfAppropriate
+        - inherited from Actor, not virtual because no children
+        - returns true because humans can be sprayed
+
+    - getTicksGrunt
+        - not virtual, not inherited, because this is the only
+            class that uses this method
+        - returns the number of ticks until the next grunt
+
+    - setTicksGrunt
+        - not virtual, not inherited, because this is the only
+            class that uses this method
+        - sets the number of ticks until next grunt
+
+
+GraphObject > Actor > Spray
+
+    - doSomething
+        - not virtual because BorderLine has no children
+        - defined in parent because other children need to use it as well
+
+    - beSprayedIfAppropriate
+        - inherited from Actor, not virtual because no children
+        - returns false because Sprays cannot be sprayed
+
+    - increaseTravel
+        - not virtual because no other classes use this method
+        - increases the total distance that this spray travelled
+
+    - isCollisionAvoidanceWorthy
+        - inherited from actor, not virtual because no children
+        - returns false because zombiecabs do not account for sprays
+            when determining where to spawn
+
+GraphObject > Actor > GhostRacerActivatedObject
+
+    - isCollisionAvoidanceWorthy
+        - inherited from Actor
+        - not virtual, because children all use the same 
+            functionality
+        - returns false because no GhostRacerActivatedObejcts
+            need to be accounted for in determining the next
+            ZombieCabs spawn point
+
+    - doActivity
+        - pure virtual because we want to force each child
+            to implement their own version of this function
+            because it will need to change based on the type
+        - hold functionality for doing something after being hit
+            by the ghostracer
+    
+    - doMove
+        - not virtual because each child should use the same
+            implementation of this function
+        - functionality for moving the objects
+
+    - checkCollide
+        - not virtual because each child should use the same
+            implementation of this function
+        - returns whether or not the actor has collided with 
+            the ghost racer
+
+    - setCollided
+        - not virtual because each child should use the same
+            implementation of this function
+        - sets the actor to have collided already
+
+    - getCollided
+        - not virtual because each child should use the same
+            implementation of this function
+        - gets whether or not the actor has already collided
+            with the player
+
+GraphObject > Actor > GhostRacerActivatedObject > OilSlick
+
+    - beSprayedIfAppropriate
+        - inherited from actor, not virtual because no children
+        - returns true if it can be affected by a spray, and then
+            performs proper logic to kill or not kill the object
+
+    - doSomething
+        - inherited from actor, not virtual because no children
+        - holds logic for what the object should do each tick
+    
+    - doActivity
+        - inherited from GhostRacerActivatedObject, not virtual 
+            because no children
+        - holds logic for what to do if hit by ghostracer
+        
+GraphObject > Actor > GhostRacerActivatedObject > HealingGoodie
+
+    - beSprayedIfAppropriate
+        - inherited from actor, not virtual because no children
+        - returns true if it can be affected by a spray, and then
+            performs proper logic to kill or not kill the object
+
+    - doSomething
+        - inherited from actor, not virtual because no children
+        - holds logic for what the object should do each tick
+    
+    - doActivity
+        - inherited from GhostRacerActivatedObject, not virtual 
+            because no children
+        - holds logic for what to do if hit by ghostracer
+        
+GraphObject > Actor > GhostRacerActivatedObject > HolyWaterGoodie
+
+    - beSprayedIfAppropriate
+        - inherited from actor, not virtual because no children
+        - returns true if it can be affected by a spray, and then
+            performs proper logic to kill or not kill the object
+
+    - doSomething
+        - inherited from actor, not virtual because no children
+        - holds logic for what the object should do each tick
+    
+    - doActivity
+        - inherited from GhostRacerActivatedObject, not virtual 
+            because no children
+        - holds logic for what to do if hit by ghostracer
+
+GraphObject > Actor > GhostRacerActivatedObject > SoulGoodie
+
+    - beSprayedIfAppropriate
+        - inherited from actor, not virtual because no children
+        - returns true if it can be affected by a spray, and then
+            performs proper logic to kill or not kill the object
+
+    - doSomething
+        - inherited from actor, not virtual because no children
+        - holds logic for what the object should do each tick
+    
+    - doActivity
+        - inherited from GhostRacerActivatedObject, not virtual 
+            because no children
+        - holds logic for what to do if hit by ghostracer
+
+GameWorld > StudentWorld
+
+    - init
+        - not virtual because no child class
+        - initializes member variables
+        
+    - move 
+        - not virtual because no child class
+        - ran each tick, basically the games main code
+
+    - cleanUp
+        - not virtual because no child class
+        - deletes allocated actors 
+        
+    - getGhostRacer
+        - not virtual because no child class
+        - returns a pointer to the player
+
+    - randint
+        - not virtual because no child class
+        - returns a random int between two numbers
+
+    - tryAdd
+        - not virtual because no child class
+        - returns if a random number is equal to 0
+            used for adding new actors
+
+    - nextLevel
+        - not virtual because no child class
+        - increases level by one
+
+    - addActor
+        - not virtual because no child class
+        - adds an actors to the vector to be displayed on the screen
+
+    - getBonus
+        - not virtual because no child class
+        - returns the current bonus
+    
+    - collide
+        - not virtual because no child class
+        - returns whether or not two actors are colliding
+    
+    - checkCollide
+        - not virtual because no child class
+        - checks all actors to see if any collide with the 
+            actor that calls the function, and returns a pointer
+            to the colliding actor if so
+
+    - setSoulsSaved
+        - not virtual because no child class
+        - sets the number of souls that the player has saved
+
+    - getSoulsSaved
+        - not virtual because no child class
+        - returns the number of souls saved by the player
+
+    - increaseSouls
+        - not virtual because no child class
+        - increases the number of saved souls by one 
+
+    - checkLaneBottom
+        - not virtual because no child class
+        - returns the y coord of the closest actor to the bottom
+        
+        checkLaneBottom
+            calculate the two x coords where lane is and where the 
+                car would be spawning
+        
+            create a pointer to an actor to keep track
+
+            for each actor in the vector
+                if it's a collisionAvoidanceWorthy actor
+                    and its x is in the given lane
+                    and its not the current_y (the one calling the function)
+                    and it the y is less than the counter actor
+                then
+                    set the counter actor to this actor
+            if the counter actor is not nullptr
+                then return the y coord of that actor
+            otherwise
+                return 5000 meaning there is not actor in this lane
+
+    - checkLaneTop
+        - not virtual because no child class
+        - returns the closest actor's y coord to the top of the screen
+        
+        checkLaneTop
+            calculate the two x coords where lane is and where the 
+                car would be spawning
+        
+            create a pointer to an actor to keep track
+
+            check that the player is not in this lane
+                and return if it is
+
+            for each actor in the vector
+                if it's a collisionAvoidanceWorthy actor
+                    and its x is in the given lane
+                    and its not the current_y (the one calling the function)
+                    and it the y is greater than the counter actor
+                then
+                    set the counter actor to this actor
+            if the counter actor is not nullptr
+                then return the y coord of that actor
+            otherwise
+                return -5000 meaning there is not actor in this lane
+
+    - subBonus
+        - not virtual because no child class
+        - decreases bonus by one 
+
+
+    
+        
+        
+
+        
+
